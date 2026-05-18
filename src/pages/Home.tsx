@@ -23,49 +23,46 @@ export const Home = () => {
 
 
     return (
-    <div className="flex-col w-full h-full px-6 py-10 text-white bg-transparent ">
+    <div className="flex flex-col w-full m-auto pr-10 mt-10 text-white bg-transparent md:w-11/12 md:p-0" >
       {/* Topbar */}
-        <div className="flex justify-between items-center mb-10">
-            <h1 className="text-4xl font-semibold">Dashboard</h1>
-
-            <select className="bg-[#13151e] border w-1/12 h-12/12 p-3 border-gray-700  rounded-lg text-2xl font-semibold text-center">
-                <option>Abril</option>
+        <div className="flex justify-between items-center mb-10 md:mt-5">
+            <h1 className="text-xl md:text-l font-semibold">Dashboard</h1>
+            <select className="bg-[#13151e] md:bg-[#13151e] border text-center text-ms border-gray-700  rounded-3xl md:text-l w-min p-1.5 ">
+                <option className="text-lg bg-none">septiembre  </option>
             </select>
         </div>
 
         {/* Cards resumen */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
-            <div className="bg-[#13132a] border border-gray-800 rounded-xl p-5 relative">
-            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r rounded-t-xl"></div>
-            <p className="text-lg text-gray-400">Balance total</p>
-            <p className="text-4xl font-semibold mt-2">
-                {formatCurrency(balance)}
-            </p>
+        <div className="flex flex-col gap-10 md:flex-row md:justify-between md:gap-20 mb-10">
+
+            <div className="bg-[#13132a] border border-gray-800 rounded-3xl p-5 relative md:m-auto md:w-1/3 md:p-3.5">
+                <p className="text-lg text-centertext-gray-400 ml-4 md:text-l">Balance total</p>
+                <p className="text-xl font-semibold mt-2 ml-4 md:text-xl">
+                    {formatCurrency(balance)}
+                </p>
             </div>
 
-            <div className="bg-[#13132a] border border-gray-800 rounded-xl p-5 relative">
-            <div className="absolute top-0 left-0 right-0 h-[3px] rounded-t-xl"></div>
-            <p className="text-lg text-gray-400">Ingresos</p>
-            <p className="text-4xl font-semibold mt-2 text-green-400">
-                {formatCurrency(ingresosTotales)}
-            </p>
+            <div className="bg-[#13132a] border border-gray-800 rounded-3xl p-5 relative md:m-auto md:w-1/3 md:p-3.5">
+                <p className="text-lg text-white ml-4 md:text-l">Ingresos</p>
+                <p className="text-xl font-semibold mt-2 text-green-400 ml-4 md:text-xl">
+                    {formatCurrency(ingresosTotales)}
+                </p>
             </div>
 
-            <div className="bg-[#13132a] border border-gray-800 rounded-xl p-5 relative">
-            <div className="absolute top-0 left-0 right-0 h-[3px]  rounded-t-xl"></div>
-            <p className="text-lg text-gray-400">Gastos</p>
-            <p className="text-4xl font-semibold mt-2 text-red-500">
-                {formatCurrency(gastosTotales)}
-            </p>
+            <div className="bg-[#13132a] border border-gray-800 rounded-3xl p-5 relative md:m-auto md:w-1/3 md:p-3.5">
+                <p className="text-lg text-white ml-4 md:text-l">Gastos</p>
+                <p className="text-xl font-semibold mt-2 text-red-500 ml-4 md:text-xl">
+                    {formatCurrency(gastosTotales)}
+                </p>
             </div>
         </div>
 
         {/* Paneles */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Gastos por categoría */}
-            <div className="bg-[#13132a] border border-gray-800 rounded-xl p-5">
+            <div className="bg-[#13132a] border border-gray-800 rounded-3xl p-5">
 
-                <h2 className="text-2xl font-semibold mb-4">Gastos por categoría</h2>
+                <h2 className="text-l mb-4 md:text-l">Gastos por categoría</h2>
 
                 <div className="flex flex-col gap-3">
                     {gastosPorCategoria.map((item) => (
@@ -83,9 +80,9 @@ export const Home = () => {
             </div>
 
             {/* Transacciones recientes */}
-            <div className="bg-[#13132a] border border-gray-800 rounded-xl p-5">
+            <div className="bg-[#13132a] border border-gray-800 rounded-3xl p-5 mb-10 md:m-0">
 
-                <h2 className="text-2xl font-semibold mb-4">Transacciones recientes</h2>
+                <h2 className="text-l mb-4 md:text-l ">Transacciones recientes</h2>
 
                 <div className="flex flex-col divide-y divide-gray-800">
                     {transactions.slice(0, 5).map((item) => (

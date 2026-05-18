@@ -5,8 +5,8 @@ export const SideBar = () => {
 
     const navClass = ({ isActive }: { isActive: boolean }) =>
         isActive
-            ? "translate-y-0 bg-[#1e1e3f] flex items-center gap-2 p-4 rounded-lg text-xl font-semibold text-white"
-            : "flex items-center gap-2 px-3 py-2 text-xl text-white/70";
+            ? "translate-y-0 w-3/3  bg-[#1e1e3f] flex items-center justify-center p-3.5 rounded-3xl text-ms font-semibold text-white transition-all duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] md:text-l"
+            : "translate-y-0 flex w-2/3   items-center justify-center p-3.5 rounded-3xl text-ms text-white transition-all duration-250 ease-[cubic-bezier(0.4,0,0.2,1)] md:text-l";
 
     const [abierto, setAbierto] = useState(false);
 
@@ -25,8 +25,8 @@ export const SideBar = () => {
             {/* Sidebar */}
             <aside
                 className={`
-                    fixed md:static top-0 left-0 h-full bg-[#13132a] border-r border-white/10 text-white p-4 flex flex-col gap-1 z-50
-                    w-2/3 md:w-1/6
+                    fixed md:static top-0 left-0 h-full bg-[#13132a] border-r border-white/10 text-white p-7 flex flex-col gap-1 z-50
+                    w-2/3 md:w-2/12 jus
 
                     transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
                     
@@ -36,11 +36,11 @@ export const SideBar = () => {
                     }
                 `}
             >
-                <div className="md:text-3xl mt-2 mb-4 pb-4 border-b border-white/10">
+                <div className="text-xl text-center md:text-xl font-semibold mt-2 mb-4 pb-7 border-b border-white/10">
                     💰 FinanceApp
                 </div>
 
-                <nav className="flex flex-col w-full h-full items-center gap-8">
+                <nav className="flex flex-col w-full h-full mt-10 items-center gap-10">
                     <NavLink to="/" className={navClass} onClick={cerrarMenu}>
                         Dashboard
                     </NavLink>
@@ -57,9 +57,9 @@ export const SideBar = () => {
 
                 <button
                     onClick={cerrarMenu}
-                    className=" bg-emerald-600 text-black text-xl p-10 rounded-lg hover:opacity-80 transition-opacity md:flex mt-auto bg-emerald-600 text-white text-xxlfont-medium py-2 px-3 rounded-lg hover:opacity-80 transition-opacity"
+                    className="p-4 border hover:cursor-pointer border-emerald-500 hover:bg-emerald-600 transition-all duration-200 active:scale-95 active:bg-emerald-500 text-l rounded-3xl md:text-l  font-semibold mb-5 "
                 >
-                    + Nueva transacción
+                Nueva transacción
                 </button>
             </aside>
         </>
