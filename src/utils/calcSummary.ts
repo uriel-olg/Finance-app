@@ -5,13 +5,13 @@ import type {Transaction} from "../types/index"
 export const calSummary = (transaccion:Transaction[]) =>{
 
     const ingresos = transaccion.filter(transaccionactual =>{
-        return transaccionactual.transaccionTipo === "ingreso"
+        return transaccionactual.transaccion === "ingreso"
     })
 
     const ingresosTotales = ingresos.reduce((acumulador, transaccionActual) => acumulador + transaccionActual.amount, 0)
 
     const gasto = transaccion.filter(transaccionactual =>{
-        return transaccionactual.transaccionTipo === "gasto"
+        return transaccionactual.transaccion === "gasto"
     })
 
     const gastosTotales = gasto.reduce((acumulador, transaccionActual) => acumulador + transaccionActual.amount, 0)

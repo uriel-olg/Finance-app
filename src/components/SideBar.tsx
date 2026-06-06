@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-export const SideBar = () => {
+
+type Props = {
+    onTransaccion: () => void 
+}
+
+export const SideBar = ({onTransaccion}: Props) => {
 
     const navClass = ({ isActive }: { isActive: boolean }) =>
         isActive
@@ -15,18 +20,16 @@ export const SideBar = () => {
     return (
         <>
             {/* Botón hamburguesa - solo mobile */}
-            <button
-                className="flex md:hidden text-3xl p-2 text-white"
-                onClick={() => setAbierto((prev) => !prev)}
-            >
-                ☰
-            </button>
-
+            
+            {abierto === false ? <button className="flex flex-col mt-0 h-min w-min md:hidden text-3xl p-2 text-white z-50"
+                onClick={() => setAbierto((prev) => !prev)} >☰</button>: "asdasd" }
             {/* Sidebar */}
+
+
             <aside
                 className={`
                     fixed md:static top-0 left-0 h-full bg-[#13132a] border-r border-white/10 text-white p-7 flex flex-col gap-1 z-50
-                    w-2/3 md:w-2/12 jus
+                    w-2/3 md:w-12/12
 
                     transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
                     
@@ -35,7 +38,9 @@ export const SideBar = () => {
                         : "-translate-x-full opacity-0 md:opacity-100 md:translate-x-0"
                     }
                 `}
-            >
+            >   
+                
+                
                 <div className="text-xl text-center md:text-xl font-semibold mt-2 mb-4 pb-7 border-b border-white/10">
                     💰 FinanceApp
                 </div>
@@ -56,10 +61,10 @@ export const SideBar = () => {
                 </nav>
 
                 <button
-                    onClick={cerrarMenu}
-                    className="p-4 border hover:cursor-pointer border-emerald-500 hover:bg-emerald-600 transition-all duration-200 active:scale-95 active:bg-emerald-500 text-l rounded-3xl md:text-l  font-semibold mb-5 "
+                    onClick={onTransaccion}
+                    className="p-3 border hover:cursor-pointer border-sky-700 hover:bg-sky-600 transition-all duration-200 active:scale-95 active:bg-sky-600 text-l rounded-3xl md:text-l  font-semibold mb-5 "
                 >
-                Nueva transacción
+                + Transacción
                 </button>
             </aside>
         </>
