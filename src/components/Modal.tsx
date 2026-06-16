@@ -3,135 +3,315 @@ import { useTransactions } from "../hooks/useTransactions";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Transacciones } from "../pages/Transacciones";
-
+import type { Category } from "../types";
 
 type Props = {
-    abierto: boolean;
-    onCerrar: () => void;
+  abierto: boolean;
+  onCerrar: () => void;
 };
+
+const inputStyle = `
+w-full
+bg-slate-800/70
+border
+border-slate-700
+rounded-2xl
+px-4
+py-3
+text-slate-200
+placeholder:text-slate-500
+transition-colors
+focus:outline-none
+focus:border-cyan-500
+`;
 
 export const Modal = ({ abierto, onCerrar }: Props) => {
-    
-    if (!abierto) return null;
+  const tipos: Category[] = [];
 
-    const tipos:string [] = ['ingreso','comida', 'transporte', 'servicios', 'ocio', 'salud',  'otro'] 
-    
-    const [tipo,setTipo] = useState< "ingreso" | "gasto">("ingreso")
-    
-    const {addTransaction} = useTransactions()
+  const [tipo, setTipo] = useState<" " | "ingreso" | "gasto">(" ");
 
-    const schema = z.object({
+  const { addTransaction } = useTransactions();
+
+  const schema = z.object({
     descripcion: z
-        .string()
-        .min(3, "La descripción debe tener al menos 4 caracteres"),
+      .string()
+      .min(3, "La descripción debe tener al menos 4 caracteres"),
 
-    categoria: z
-        .string()
-        .min(1, "Debes seleccionar una categoría"),
+    categoria: z.string().min(1, "Debes seleccionar una categoría"),
 
-    fecha: z
-        .string()
-        .min(1, "La fecha es obligatoria"),
+    fecha: z.string().min(1, "La fecha es obligatoria"),
 
-    monto: z
-        .coerce
-        .number()
-        .positive("El monto debe ser mayor a 0"),
+    monto: z.coerce.number().positive("El monto debe ser mayor a 0"),
+  });
+
+  type FormData = z.output<typeof schema>;
+
+  const {
+  register,
+  handleSubmit,
+  reset,
+  formState: { errors },
+} = useForm<
+  z.input<typeof schema>,
+  any,
+  z.output<typeof schema>
+>({
+  resolver: zodResolver(schema),
+});
+
+  const onSubmit = (data: FormData) => {
+    addTransaction({
+      id: crypto.randomUUID(),
+      transaccion: tipo,
+      categoriaTransaccion: data.categoria,
+      descripcion: data.descripcion,
+      amount: data.monto,
+      fecha: data.fecha,
     });
+    reset();
+    setTipo(" ");
+    onCerrar();
+  };
 
-    type FormData = z.inter<typeof schema>
+  if (!abierto) return null;
 
+  return (
+    // Overlay que cubre toda la pantalla
+    <div
+      className="
+  fixed
+  inset-0
+  bg-black/70
+  backdrop-blur-sm
+  flex
+  justify-center
+  items-center
+  z-50
+  p-4
+  "
+      onClick={onCerrar}
+    >
+      {/* Contenedor del modal */}
+      <div
+        className="
+  bg-slate-900/95
+  backdrop-blur-xl
+  border
+  border-slate-700/50
+  text-white
+  rounded-3xl
+  shadow-2xl
+  shadow-black/40
+  w-full
+  max-w-xl
+  h-80%
+  "
+        onClick={(e) => e.stopPropagation()}
+      >
+        <form
+          className="
+  flex
+  flex-col
+  gap-6
+  p-8
+  "
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-2xl font-bold">Nueva Transacción</h2>
 
-    const {register,handleSubmit, formState: {errors},} = useForm<FormData>({
-        resolver:zodResolver(schema)
-    })
-
-    const onSubmit = (data:FormData) => {
-
-        addTransaction({
-            id:crypto.randomUUID(),
-            transaccion:tipo,
-            categoriaTransaccion:data.categoria,
-            descripcion:data.descripcion,
-            amount:data.monto,
-            fecha:data.fecha
-        })
-        onCerrar()
-    }
-
-
-    return (
-        // Overlay que cubre toda la pantalla
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50" onClick={onCerrar}>
-
-            {/* Contenedor del modal */}
-            <div className="bg-[#13132a] border-r border-white/10 text-white rounded-xl p-6 w-11/12 max-w-lg m-auto" onClick={(e) => e.stopPropagation()}>
-                
-                <form action="" className="flex flex-col gap-5 p-5" onSubmit={handleSubmit(onSubmit)}>
-                    
-                    <div className="flex flex-row justify-between items-center mb-5">
-                        <h2 className="text-xl font-semibold items-center ">Nueva Transaccion</h2>
-                        <button onClick={onCerrar} className="border border-gray-500 text-white p-1 pl-3 pr-3 rounded-lg cursor-pointer active:bg-red-500 transition-all duration-300 ease-in-out active:scale-95 hover:bg-red-500 active:border-red-500" >X</button>   
-                    </div>
-                    
-                    <div className="flex flex-row justify-center items-center gap-5 mb-5 ">
-                        <button type="button" className={`${tipo === "ingreso" ? "bg-green-500 border-green-500" : "border border-green-500 text-green-500" } shadow w-full rounded-lg p-1 transition-all duration-300 ease-in-out active:scale-95 hover:cursor-pointer`} onClick={()=> setTipo("ingreso")}> Ingreso</button>
-                        <button type="button" className={`${tipo === "gasto" ? "bg-red-500 border-red-500": "border border-red-500 text-red-500"} w-full rounded-lg p-1 transition-all duration-300 ease-in-out active:scale-95 hover:cursor-pointer `} onClick={()=> setTipo("gasto")}> Gasto</button>
-                    </div>
-
-                    <label htmlFor="" className="flex flex-col text-gray-200/80">
-                        Descripcion
-                        <input type="text" className="border-b border-gray-600 p-2 outline-none focus:border-sky-500 "  placeholder="Ej:Supermercado" {...register("descripcion")}></input>
-                        {errors.descripcion && (
-                            <p className="text-red-500 text-sm mt-1">
-                            {errors.descripcion.message}
-                            </p>
-                        )}
-                    </label>
-                    
-                    <label htmlFor="" className="flex flex-col text-gray-200/80">
-                        Categoria
-                        <select className="border-b border-gray-600 p-2 outline-none focus:border-sky-500 "  {...register("categoria")}>    
-                            {tipos.map((item)=> (
-                                <option key={item} value={item} className="bg-gray-800 rounded-4xl p-1">
-                                    {item}
-                                </option>
-                            ))}
-                        {errors.categoria && (
-                        <p className="text-red-500 text-sm mt-1">
-                        {errors.categoria.message}
-                        </p>
-                        )}            
-                        </select>
-                    </label>
-
-                    <label htmlFor="">
-                        Fecha
-                        <br />
-                        <input type="date" className="w-full border-b border-gray-600 p-2 outline-none focus:border-sky-500 "  {...register("fecha")}></input>
-                        {errors.fecha && (
-                            <p className="text-red-500 text-sm mt-1">
-                            {errors.fecha.message}
-                            </p>
-                        )}
-                    </label>
-
-                    <label htmlFor="" className="flex flex-col text-gray-200/80">
-                        Monto
-                        <input type="number" className="border-b border-gray-600 p-2 outline-none focus:border-sky-500 " placeholder="$2000" {...register("monto")}></input>
-                        {errors.monto && (
-                            <p className="text-red-500 text-sm mt-1">
-                            {errors.monto.message}
-                            </p>
-                        )}
-                    </label>
-                    
-                    <button className="mt-4 border-2 border-sky-500  text-white p-4 py-2 rounded-xl cursor-pointer active:bg-sky-500 transition-all duration-300 ease-in-out active:scale-95 hover:cursor-pointer" > Agregar</button>
-                    
-                </form>
+              <p className="text-sm text-slate-400">
+                Registra un ingreso o gasto
+              </p>
             </div>
-        </div>
-    );
-};
 
+            <button
+              type="button"
+              onClick={onCerrar}
+              className="
+    w-10
+    h-10
+    rounded-xl
+    bg-slate-800
+    hover:bg-red-500
+    transition-all
+    duration-300
+    "
+            >
+              ✕
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setTipo("ingreso")}
+              className={`
+    py-3
+    rounded-2xl
+    font-medium
+    transition-all
+    duration-300
+    active:scale-95
+    ${
+      tipo === "ingreso"
+        ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/20"
+        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+    }
+    `}
+            >
+              💰 Ingreso
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTipo("gasto")}
+              className={`
+    py-3
+    rounded-2xl
+    font-medium
+    transition-all
+    duration-300
+    active:scale-95
+    ${
+      tipo === "gasto"
+        ? "bg-red-500 text-white shadow-lg shadow-red-500/20"
+        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+    }
+    `}
+            >
+              💸 Gasto
+            </button>
+          </div>
+
+          <label
+            htmlFor=""
+            className="
+flex
+flex-col
+gap-2
+text-sm
+font-medium
+text-slate-300
+"
+          >
+            Descripcion
+            <input
+              type="text"
+              className={`${inputStyle}`}
+              placeholder="Ej:Supermercado"
+              {...register("descripcion")}
+            ></input>
+            {errors.descripcion && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.descripcion.message}
+              </p>
+            )}
+          </label>
+
+          <label
+            htmlFor=""
+            className="
+flex
+flex-col
+gap-2
+text-sm
+font-medium
+text-slate-300
+"
+          >
+            Categoria
+            <select
+              className="border-b border-gray-600 p-2 outline-none focus:border-sky-500 "
+              {...register("categoria")}
+            >
+              {tipo === "ingreso" ? (
+                <option value="ingreso">ingreso</option>
+              ) : (
+                tipos.map((item) => (
+                  <option key={item} value={item} className={`${inputStyle}`}>
+                    {item}
+                  </option>
+                ))
+              )}
+              {errors.categoria && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.categoria.message}
+                </p>
+              )}
+            </select>
+          </label>
+
+          <label
+            htmlFor=""
+            className="
+flex
+flex-col
+gap-2
+text-sm
+font-medium
+text-slate-300
+"
+          >
+            Fecha
+            <br />
+            <input
+              type="date"
+              className={`${inputStyle}`}
+              {...register("fecha")}
+            ></input>
+            {errors.fecha && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.fecha.message}
+              </p>
+            )}
+          </label>
+
+          <label
+            htmlFor=""
+            className="
+flex
+flex-col
+gap-2
+text-sm
+font-medium
+text-slate-300
+"
+          >
+            Monto
+            <input
+              type="number"
+              className={`${inputStyle}`}
+              placeholder="$2000"
+              {...register("monto")}
+            ></input>
+              <p className="text-red-500 text-sm mt-1">
+               {errors.monto && errors.monto.message} 
+            </p>
+            
+          </label>
+
+          <button
+            type="submit"
+            className="
+  mt-2
+  py-3
+  rounded-2xl
+  bg-cyan-500
+  text-white
+  font-semibold
+  transition-all
+  duration-300
+  hover:bg-cyan-600
+  active:scale-95
+  shadow-lg
+  shadow-cyan-500/20
+  "
+          >
+            Agregar Transacción
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};

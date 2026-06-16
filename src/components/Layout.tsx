@@ -1,7 +1,7 @@
 import { Modal } from "./Modal";
 import { SideBar } from "./SideBar";
-
-import { ReactNode, useState } from 'react'
+import type { ReactNode } from "react";
+import { useState } from 'react'
 
 type Props = {
     children: ReactNode
@@ -16,9 +16,9 @@ export const Layout = ({children}:Props)=>{
     
     return (
     
-        <div className={`bg-[#0d0d1a] grid grid-cols-1 md:grid-cols-[20%_80%] w-full h-full`}>
+        <div className={`bg-[#0d0d1a] flex flex-col md:grid md:grid-cols-[15%_85%] w-full h-full`}>
 
-            <SideBar onTransaccion={() => setAbierto(true)} />
+            <SideBar onTransaccion={() => setAbierto(true)}/>
             <Modal abierto={abierto} onCerrar={()=> setAbierto(false)}></Modal>
             <main className="w-full h-full overflow-auto">
             {children}

@@ -1,6 +1,6 @@
-export type TransactionType = "ingreso" | "gasto"
+export type TransactionType = " " | "ingreso" | "gasto"
 
-export type Category =  'comida' | 'transporte' | 'servicios' | 'ocio' | 'salud' | 'ingreso' | 'otro'
+export type Category =  'comida' | 'transporte' | 'servicios' | 'ocio' | 'salud' | 'ingreso' | 'otro' | string
 
 export interface Transaction {
     id:string,

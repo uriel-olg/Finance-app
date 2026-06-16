@@ -1,85 +1,205 @@
-import { useTransactions } from "../hooks/useTransactions"
-import ingreso from "../assets/ingreso.png"
-import comidaImg from "../assets/comida.png"
-import transporteImg from "../assets/transporte.png"
-import serviciosImg from "../assets/servicios.png"
-import ocioImg from "../assets/ocio.png"
-import saludImg from "../assets/salud.png"
-import otroImg from "../assets/otros.png"
+import { useTransactions } from "../hooks/useTransactions";
+import ingreso from "../assets/ingreso.png";
+import comidaImg from "../assets/comida.png";
+import transporteImg from "../assets/transporte.png";
+import serviciosImg from "../assets/servicios.png";
+import ocioImg from "../assets/ocio.png";
+import saludImg from "../assets/salud.png";
+import otroImg from "../assets/otros.png";
 
+export const Categorias = () => {
+  const { transactions } = useTransactions();
 
-export const Categorias = ()=>{
+  const Filtrar = transactions
+    .filter((t) => t.transaccion === "gasto")
+    .reduce(
+      (acc, item) => {
+        const existe = acc.find(
+          (i) => i.categoria === item.categoriaTransaccion,
+        );
 
-    const { transactions } = useTransactions();
-
-    const Filtrar = transactions.filter(t => t.transaccion === "gasto")
-    .reduce((acc,item) =>{
-        const existe = acc.find(i => i.categoria === item.categoriaTransaccion)
-
-        if(existe){
-            existe.total += item.amount
-            existe.contador++
-        }else{
-            acc.push({categoria: item.categoriaTransaccion, total : item.amount, contador:1})
+        if (existe) {
+          existe.total += item.amount;
+          existe.contador++;
+        } else {
+          acc.push({
+            categoria: item.categoriaTransaccion,
+            total: item.amount,
+            contador: 1,
+          });
         }
-        return acc
-    },[] as {categoria: string ; total:number ; contador: number ;}[])
+        return acc;
+      },
+      [] as { categoria: string; total: number; contador: number }[],
+    );
 
-    const gastosTotales = Filtrar.reduce((acc,item) => acc + item.total,0)
+  const gastosTotales = Filtrar.reduce((acc, item) => acc + item.total, 0);
 
-    const categoriasImg = {
-        comida: comidaImg,
-        transporte: transporteImg,
-        servicios: serviciosImg,
-        ocio: ocioImg,
-        salud: saludImg,
-        ingreso: ingreso,
-        otro: otroImg,
-    };
+  const categoriasImg = {
+    comida: comidaImg,
+    transporte: transporteImg,
+    servicios: serviciosImg,
+    ocio: ocioImg,
+    salud: saludImg,
+    ingreso: ingreso,
+    otro: otroImg,
+  };
 
-    const coloresCategoria = {
-        comida: "bg-blue-500",
-        transporte: "bg-green-500",
-        servicios: "bg-yellow-500",
-        ocio: "bg-purple-500",
-        salud: "bg-pink-500",
-        ingreso: "bg-emerald-500",
-        otro: "bg-gray-500",
-    };
+  const coloresCategoria = {
+    comida: "bg-cyan-500",
+    transporte: "bg-green-500",
+    servicios: "bg-amber-500",
+    ocio: "bg-violet-500",
+    salud: "bg-pink-500",
+    ingreso: "bg-emerald-500",
+    otro: "bg-slate-500",
+  };
 
+  const cardStyle = `
+    bg-slate-900/70
+    backdrop-blur-xl
+    border border-slate-700/50
+    rounded-3xl
+    shadow-lg shadow-black/20
+    transition-all duration-300
+    hover:border-slate-600
+    hover:-translate-y-1
+    `;
 
-    return (   
-        <div className="flex flex-col h-full justify-between text-white">
+  return (
+    <div className="flex flex-col h-full text-white p-4 md:p-8">
+      {/* Header */}
+      <nav className="flex justify-between items-center mb-8 md:mb-10">
+        <h1 className="text-3xl font-bold tracking-tight">Categorías</h1>
+      </nav>
 
-            <nav className="flex flex-row h-min justify-between items-center pl-5 pr-5 gap-10 md:p-10">
-                <p className="w-min flex text-center text-lg md:text-2xl">Categorias</p>
-                <button className="transition-all duration-200 hover:bg-emerald-600 active:scale-95 active:bg-emerald-500 border-2 border-emerald-600 w-max pr-4 pl-4 p-1 text-lg rounded-3xl  md:w-max md:h-min md:text-l md:pr-5 md:pl-5 md:p-1">+ categoria</button>
-            </nav>
-            
-            <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4  p-10 m-auto">
-                {Filtrar.length === 0 ? <div className="flex items-center justify-center text-white m-auto text-3xl md:text-2xl"> no hay categorias</div> 
-                : Filtrar.map((item) =>{
-                    const porcentajesTotales = Math.round((item.total / gastosTotales)* 100)
-                    return (
-                        <div key={item.categoria} className="flex flex-col w-full h-full  bg-[#13132a] border border-gray-800 rounded-3xl p-7">
-                            <div className="gap-5 ">
-                                <img src={`${categoriasImg[item.categoria]}`} className="w-12 h-12 mb-2"/>
-                                <div className="flex flex-col">
-                                    <p className="font-semibold md:text-xl">{item.categoria}</p>
-                                    <p className="text-gray-500/90 md:text-lg">{item.contador} transacciones</p>
-                                </div>
-                            </div>
-                            <div className="flex bg-gray-700 w-full h-2 rounded-2xl mt-5 mb-5" >
-                                <div className={`h-2 bg-blue-500 rounded-3xl ${coloresCategoria[item.categoria as keyof typeof coloresCategoria]}`} style={{width:`${porcentajesTotales}%`}}></div>
-                            </div>
-                            <div className="flex flex-row justify-between">
-                                <p className="font-semibold md:text-lg">${item.total}</p>
-                                <p className="text-sky-300 md:text-lg ">{porcentajesTotales}%</p>
-                            </div>
-                        </div>
-                    )
-                })}
-            </div>
+      {Filtrar.length === 0 ? (
+        <div
+          className="
+        flex
+        flex-col
+        items-center
+        justify-center
+        h-full
+        text-slate-500
+        "
+        >
+          <span className="text-5xl mb-4">📊</span>
+          <span className="text-xl">No hay categorías registradas</span>
         </div>
-    )
-}
+      ) : (
+        <div
+          className="
+        grid
+        grid-cols-1
+        md:grid-cols-2
+        xl:grid-cols-3
+        gap-6
+        "
+        >
+          {Filtrar.map((item) => {
+            const porcentajesTotales = Math.round(
+              (item.total / gastosTotales) * 100,
+            );
+
+            return (
+              <div key={item.categoria} className={`${cardStyle} p-6`}>
+                {/* Header card */}
+                <div className="flex items-center gap-4">
+                  <div
+                    className="
+                  w-14
+                  h-14
+                  rounded-2xl
+                  bg-slate-800
+                  flex
+                  items-center
+                  justify-center
+                  "
+                  >
+                    <img
+                      src={
+                        categoriasImg[
+                          item.categoria as keyof typeof categoriasImg
+                        ]
+                      }
+                      className="w-8 h-8 object-contain"
+                      alt={item.categoria}
+                    />
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-lg capitalize text-slate-200">
+                      {item.categoria}
+                    </h3>
+
+                    <p className="text-sm text-slate-400">
+                      {item.contador} transacciones
+                    </p>
+                  </div>
+                </div>
+
+                {/* Barra */}
+                <div
+                  className="
+                w-full
+                h-3
+                bg-slate-800
+                rounded-full
+                overflow-hidden
+                mt-6
+                mb-5
+                "
+                >
+                  <div
+                    className={`
+                  h-full
+                  rounded-full
+                  transition-all
+                  duration-700
+                  ${
+                    coloresCategoria[
+                      item.categoria as keyof typeof coloresCategoria
+                    ]
+                  }
+                  `}
+                    style={{
+                      width: `${porcentajesTotales}%`,
+                    }}
+                  />
+                </div>
+
+                {/* Footer */}
+                <div className="flex justify-between items-center">
+                  <span
+                    className="
+                  text-2xl
+                  font-bold
+                  text-slate-200
+                  "
+                  >
+                    ${item.total.toLocaleString()}
+                  </span>
+
+                  <span
+                    className="
+                  px-3
+                  py-1
+                  rounded-full
+                  bg-cyan-500/10
+                  text-cyan-400
+                  text-sm
+                  font-medium
+                  "
+                  >
+                    {porcentajesTotales}%
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};

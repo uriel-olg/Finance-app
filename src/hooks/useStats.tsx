@@ -1,10 +1,9 @@
-    import { useTransactions } from "./useTransactions"
+import { useTransactions } from "./useTransactions"
     import { useState } from "react"
 
     export const useStats = () => {
 
         const {transactions} = useTransactions()
-        
 
         const [MesActivo,setMesActivo] = useState <"3M" | "6M" | "1Año"> ("6M")
         const mesActual = MesActivo === "3M" ? 3 : MesActivo === "6M" ? 6 : 12
@@ -95,6 +94,7 @@
             return mesActual > mesAnterior ? actual : existe
         })
 
+        
 
         const topCategorias = () => {
 
@@ -112,12 +112,12 @@
                 if(existente){
                     existente.total += actual.amount
                 }else{
-                    existe.push({fecha: actual.fecha, categoriaTransaccion: actual.categoriaTransaccion, total : actual.amount})
+                    existe.push({fecha: actual.fecha,transaccion:actual.transaccion ,categoriaTransaccion: actual.categoriaTransaccion, total : actual.amount})
                 }
                 
                 return existe
 
-            }, [] as {fecha: string, categoriaTransaccion: string, total : number}[])
+            }, [] as {fecha: string, transaccion:string,categoriaTransaccion: string, total : number}[])
 
             return catogorias.sort((a,b)=> b.total - a.total)
         }
@@ -125,7 +125,7 @@
         const topCategoriasTotal = topCategorias()
 
         const gastos = topCategoriasTotal.filter(
-            item => item.categoriaTransaccion === "gasto"
+            item => item.transaccion === "gasto"
         );
 
         const categoriaTop =
@@ -135,6 +135,45 @@
                 actual.total > existe.total ? actual : existe
         );
 
+        const gastosPorMes = () => {
+
+            const fecha = new Date()
+            fecha.setMonth(hoy.getMonth() - mesActual)
+            
+
+            const meses = new Map<string,{fecha:string,ingreso:number,gastos:number}>()
+
+            transactions.filter( item => new Date(item.fecha) >= fecha ).forEach(items => {
+
+                const mes = items.fecha.slice(0,7)
+                
+                //si el mes no existe lo creamos 
+                if(!meses.has(mes)){
+                    meses.set(mes,{
+                        fecha:mes,
+                        ingreso:0,
+                        gastos:0
+                    })
+                }
+                //creamos el registro 
+                const registroMes = meses.get(mes)
+
+                if(items.transaccion === "ingreso"){
+                    registroMes !== undefined ? registroMes.ingreso += items.amount : undefined
+                }
+                else{
+                    registroMes !== undefined ?  registroMes.gastos += items.amount : undefined
+                }
+                
+            })
+
+        return Array.from(meses.values())
+    }
+    
+
+    const totalGastosMes = gastosPorMes()
+
+    console.log(totalGastosMes)
         return {
             MesActivo,
             setMesActivo,
@@ -144,5 +183,7 @@
             mesMasAhorradoFiltrado,
             categoriaTop,
             variacion,
+            gastos,
+            totalGastosMes
         }
     }   
