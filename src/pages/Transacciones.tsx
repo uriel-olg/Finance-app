@@ -220,7 +220,7 @@ export const Transacciones = () => {
                         "
                   >
                     <img
-                      src={categoriasImg[item.categoriaTransaccion]}
+                      src={categoriasImg[item.categoriaTransaccion as keyof typeof categoriasImg]}
                       className="w-6 h-6 object-contain"
                     />
                   </div>
@@ -248,7 +248,7 @@ export const Transacciones = () => {
                         text-xs
                         md:text-sm
                         font-medium
-              ${coloresCategoria[item.categoriaTransaccion]}
+              ${coloresCategoria[item.categoriaTransaccion as keyof typeof coloresCategoria]}
               `}
                   >
                     {item.categoriaTransaccion}

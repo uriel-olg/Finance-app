@@ -8,7 +8,6 @@ import {
   XAxis,
   YAxis,
   Bar,
-  Line,
   ComposedChart,
 } from "recharts";
 

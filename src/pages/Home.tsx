@@ -142,7 +142,8 @@ export const Home = () => {
           <div className="flex flex-col gap-4">
             {gastosPorCategoria.map((item) => {
               const porcentaje = (item.total / gastosTotales) * 100;
-
+              
+              
               return (
                 <div
                   key={item.categoria}
@@ -228,7 +229,7 @@ export const Home = () => {
                     "
                 >
                   <img
-                    src={categoriasImg[item.categoriaTransaccion]}
+                    src={categoriasImg[item.categoriaTransaccion as keyof typeof categoriasImg]}
                     alt={item.categoriaTransaccion}
                     className="w-7 h-7 object-contain"
                   />
