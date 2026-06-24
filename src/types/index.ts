@@ -1,6 +1,11 @@
 export type TransactionType = " " | "ingreso" | "gasto"
 
-export type Category =  'comida' | 'transporte' | 'servicios' | 'ocio' | 'salud' | 'ingreso' | 'otro' | string
+
+export const categories = [
+    'comida','transporte','servicios','ocio','salud','ingreso','otro' 
+] as const  
+
+export type Category = typeof categories[number]
 
 export interface Transaction {
     id:string,

@@ -60,7 +60,9 @@ export const Home = () => {
     hover:border-slate-600
     `;
 
-
+  const fechas = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+  
+  const mesActual = new Date();
 
   return (
     <div className="flex flex-col w-full h-full m-auto pb-3 pr-4 pl-4  text-white bg-transparent md:w-11/12 md:p-0 overflow-y-auto scrollbar-hide ">
@@ -68,7 +70,7 @@ export const Home = () => {
       <div className="flex justify-between items-center mb-10 mt-8">
         <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
 
-        <select
+        <div
           className="
                 bg-slate-900/80
                 border
@@ -82,8 +84,8 @@ export const Home = () => {
                 transition-colors
                 "
         >
-          <option>Septiembre</option>
-        </select>
+          {fechas[mesActual.getMonth()]}
+        </div>
       </div>
 
       {/* Cards resumen */}
@@ -142,8 +144,7 @@ export const Home = () => {
           <div className="flex flex-col gap-4">
             {gastosPorCategoria.map((item) => {
               const porcentaje = (item.total / gastosTotales) * 100;
-              
-              
+
               return (
                 <div
                   key={item.categoria}
@@ -229,7 +230,11 @@ export const Home = () => {
                     "
                 >
                   <img
-                    src={categoriasImg[item.categoriaTransaccion as keyof typeof categoriasImg]}
+                    src={
+                      categoriasImg[
+                        item.categoriaTransaccion as keyof typeof categoriasImg
+                      ]
+                    }
                     alt={item.categoriaTransaccion}
                     className="w-7 h-7 object-contain"
                   />

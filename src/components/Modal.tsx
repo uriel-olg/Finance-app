@@ -3,7 +3,7 @@ import { useTransactions } from "../hooks/useTransactions";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Category } from "../types";
+import { categories } from "../types";
 
 type Props = {
   abierto: boolean;
@@ -26,8 +26,6 @@ focus:border-cyan-500
 `;
 
 export const Modal = ({ abierto, onCerrar }: Props) => {
-  const tipos: Category[] = [];
-
   const [tipo, setTipo] = useState<" " | "ingreso" | "gasto">(" ");
 
   const { addTransaction } = useTransactions();
@@ -37,7 +35,7 @@ export const Modal = ({ abierto, onCerrar }: Props) => {
       .string()
       .min(3, "La descripción debe tener al menos 4 caracteres"),
 
-    categoria: z.string().min(1, "Debes seleccionar una categoría"),
+    categoria: z.enum(categories),
 
     fecha: z.string().min(1, "La fecha es obligatoria"),
 
@@ -47,17 +45,13 @@ export const Modal = ({ abierto, onCerrar }: Props) => {
   type FormData = z.output<typeof schema>;
 
   const {
-  register,
-  handleSubmit,
-  reset,
-  formState: { errors },
-} = useForm<
-  z.input<typeof schema>,
-  any,
-  z.output<typeof schema>
->({
-  resolver: zodResolver(schema),
-});
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<z.input<typeof schema>, any, z.output<typeof schema>>({
+    resolver: zodResolver(schema),
+  });
 
   const onSubmit = (data: FormData) => {
     addTransaction({
@@ -228,7 +222,7 @@ text-slate-300
               {tipo === "ingreso" ? (
                 <option value="ingreso">ingreso</option>
               ) : (
-                tipos.map((item) => (
+                categories.map((item) => (
                   <option key={item} value={item} className={`${inputStyle}`}>
                     {item}
                   </option>
@@ -285,10 +279,9 @@ text-slate-300
               placeholder="$2000"
               {...register("monto")}
             ></input>
-              <p className="text-red-500 text-sm mt-1">
-               {errors.monto && errors.monto.message} 
+            <p className="text-red-500 text-sm mt-1">
+              {errors.monto && errors.monto.message}
             </p>
-            
           </label>
 
           <button

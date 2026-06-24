@@ -135,7 +135,7 @@ export const Transacciones = () => {
         placeholder="🔍 Buscar transaccion..."
         className="
             w-full
-            h-12
+            h-13
             p-4
             bg-slate-900/70
             border
@@ -148,12 +148,14 @@ export const Transacciones = () => {
             transition-colors
             mb-10
             md:w-11/12
+            md:mb-5
+            md:mt-7
             md:m-auto
-            md:mb-10
+            
             "
       />
 
-      <div className={`${cardStyle} p-4 mb-10 md:w-11/12 md:m-auto`}>
+      <div className={`${cardStyle} p-3.5 mb-10 md:w-11/12 md:m-auto md:mt-5`}>
         <div
           className="
             grid

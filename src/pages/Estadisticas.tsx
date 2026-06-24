@@ -202,12 +202,12 @@ export const Estadisticas = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between text-white gap-10 w-full h-80 mt-5 pl-5 pr-5">
+      <div className="flex flex-col md:flex-row justify-between text-white gap-10 w-full h-min mt-5 pl-5 pr-5">
         <div
-          className={`${cardStyle}w-full h-80 border border-gray-600 rounded-3xl p-6  `}
+          className={`${cardStyle}w-full border border-gray-600 rounded-3xl p-6  h-full`}
         >
           <p className="text-lg font-semibold">promedio mensual </p>
-
+          <br />
           <ResponsiveContainer width="100%" height={250}>
             <ComposedChart data={totalGastosMes}>
               <XAxis dataKey="fecha" />
@@ -222,7 +222,7 @@ export const Estadisticas = () => {
         </div>
 
         <div
-          className={`bg-${cardStyle} border border-gray-600 rounded-3xl p-6 w-full`}
+          className={`bg-${cardStyle} border border-gray-600 rounded-3xl p-6 w-full h-full`}
         >
           <p className="font-semibold text-lg">Distribucíon de gastos</p>
 
